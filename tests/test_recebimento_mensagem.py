@@ -2,9 +2,9 @@ from random import randint
 
 import pytest
 
-from src.recebimento.mensagem import (recebimento_mensagem, filter_mensagem,
+from src.recebimento.mensagem_recebida import (recebimento_mensagem, filter_mensagem,
                                       ordenar_mensagem, pipeline)
-from src.config import pb
+from config import pb
 
 
 @pytest.fixture(scope='module')
@@ -12,12 +12,10 @@ def retorna_mensagens():
     return recebimento_mensagem(pb)
 
 
-@pytest.mark.parametrize('executation', range(5))
-def test_se_recebimento_de_mensagem_esta_filtrando_mensagem(retorna_mensagens, executation):
-    mensagem = filter_mensagem(retorna_mensagens)
+def test_se_recebimento_de_mensagem_esta_filtrando_mensagem(retorna_mensagens):
+    mensagens = filter_mensagem(retorna_mensagens)
     esperado = 'title'
-    index = randint(0, len(mensagem) - 1)
-    assert esperado not in mensagem[index]
+    assert not any(mensagem.get(esperado) for mensagem in mensagens)
 
 
 def test_se_esta_ordenando_por_codigo_de_recebimento(retorna_mensagens):
